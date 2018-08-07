@@ -1,21 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"time"
 )
 
 func clockHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w,
-		`<!DOCTYPE html>
-    <html>
-    <body>
-      It's %d o'clock now.
-    </body>
-    </html>
-  `, time.Now().Hour())
+	t := template.Must(template.ParseFiles("./templates/clock.html.tpl"))
+
+	if err := t.ExecuteTemplate(w, "clock.html.tpl", time.Now()); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
